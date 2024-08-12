@@ -1,12 +1,13 @@
 module class_Inventory
 
     use class_Product ! Importamos la clase producto
+    use class_Analyzer
     public
-    integer :: numProducts = 0
+    integer :: numProducts
 
     contains ! Funciones y subrutinas
 
-    ! Subrutina para la lectuar de los archivos
+    ! Subrutina para la lectura de los archivos
     subroutine readFile()
 
         character (len = 100) :: linea
@@ -38,6 +39,8 @@ module class_Inventory
             i = i + 1
 
             print *, 'Línea ', i, ': ', trim(linea)
+
+            call analizeCadena(linea)
             
         END DO
 
@@ -49,8 +52,8 @@ module class_Inventory
     subroutine addProduct(array,  name, amount, price, location)
 
         type(Product), allocatable, intent(inout) :: array(:)
-        type(Product), allocatable :: temp(:)
-        type(product) :: newProduct
+        type(Product), allocatable :: temp(:) !array temporal
+        type(Product) :: newProduct
         character(len=100), intent(in) ::  name, location
         integer, intent(in)  :: amount
         real, intent(in) :: price
@@ -62,25 +65,90 @@ module class_Inventory
 
         numProducts = numProducts + 1
 
+        print *, numProducts
+
         if ( allocated(array) ) then
 
             allocate(temp(numProducts-1))
-
             temp = array
-
             deallocate(array)
-
             allocate(array(numProducts))
-
-            array(1:num_personas-1)= temp
-
+            array(1:numProducts-1) = temp
             deallocate(temp)
+
         else
             allocate(array(numProducts))
         end if
-
         array(numProducts) = newProduct
         
     end subroutine addProduct
+
+    subroutine addStock(array,  name, amount, location)
+        type(Product), allocatable, intent(inout) :: array(:)
+        character(len=100), intent(in) ::  name, location
+        integer, intent(inout)  :: amount
+        integer :: n
+        logical :: isOkay
+        
+        isOkay = .true.
+
+        n = size(array)
+
+        do i = 1, n
+
+            if ( array(i)%name == name .and. array(i)%location == location) then
+
+                amount = array(i)%amount + amount
+
+                call  array(i)%setAmount(amount)
+
+                isOkay = .false.
+
+            end if
+            
+        end do
+
+        if ( isOkay ) print *, "No se encontro ningun registro del Producto", name, " en ", location
+
+    end subroutine addStock
+
+    subroutine reduceStock(array,  name, amount, location)
+        type(Product), allocatable, intent(inout) :: array(:)
+        character(len=100), intent(in) ::  name, location
+        integer, intent(inout)  :: amount
+        integer :: n
+        logical :: isOkay
+        
+        isOkay = .true.
+
+        n = size(array)
+
+        do i = 1, n
+
+            if ( array(i)%name == name .and. array(i)%location == location) then
+
+                if ( array(i)%amount >= amount ) then
+
+                    amount = array(i)%amount + amount
+
+                    call  array(i)%setAmount(amount)
+
+                else
+
+                    print *, "¡A ocurrido un error al actualizar!"
+                    print *, "Error: la cantidad a eliminar es mayor a la cantidad en esa ubicación"
+                    print *, "Producto: ", array(i)%name, " Stock: ", array(i)%amount, "Reajuste: -", amount
+                    
+                end if
+
+                isOkay = .false.
+
+            end if
+            
+        end do
+
+        if ( isOkay ) print *, "No se encontro ningun registro del Producto", name, " en ", location
+
+    end subroutine reduceStock
     
 end module class_Inventory

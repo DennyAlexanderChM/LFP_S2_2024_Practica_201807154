@@ -1,22 +1,20 @@
 program main
     use class_Product
     use class_Inventory
+    use class_Analyzer
 
     implicit none
 
     ! Define variables
-    type(Product), allocatable :: products(:) ! Almacenara cada uno de los productos del inventario
+    !type(Product), allocatable :: products(:) ! Almacenara cada uno de los productos del inventario
 
-  
-    type(Product) :: myProduct
+    integer:: optionSelect
 
-    integer:: optionSelect, i
+    character(len=100) :: cadena
 
     optionSelect = 0
-   
-    ! character(:), allocatable :: name
-    
-    
+
+    cadena = "crear_equipo Lapices;100;2.50;BodegaA"
 
     !ciclo hasta que la opción seleccionada sea 2 (finalizar programa)
     do while (optionSelect /= 4)
@@ -36,34 +34,11 @@ program main
         ! Select para dirigir a la opción ingresada
         SELECT CASE (optionSelect)
         CASE (1)
-
+            call readFile()
         CASE (2)
-
-            ! Asignar valores a los elementos del array
-            do  
-                print *, "Ingrese el nombre de la nueva persona (o 'salir' para terminar):"
-
-                read *, myProduct%name
-
-                if (trim(myProduct%name) == 'salir') exit
-
-                print *, "Ingrese la cantidad ", myProduct%name , ":"
-                read *, myProduct%amount
-                print *, "Ingrese la precio ", myProduct%name , ":"
-                read *, myProduct%price
-                print *, "Ingrese la ubicacion ", myProduct%name , ":"
-                read *, myProduct%location
-
-                call addProduct(products, myProduct%name, myProduct%amount, myProduct%price, myProduct%location)
-
-            end do
-
+            print *, "Opcion 2"
         CASE (3)
-            ! Imprimir los valores
-            print *, "Datos ingresados:"
-            do i = 1, numProducts
-                print *, 'Nombre:', products(i)%name, 'Cantidad:', products(i)%amount, 'Precio:', products(i)%price, 'Ubicacion:', products(i)%location
-            end do
+            print *, "Option 3"
         CASE (4)
             WRITE(*,*)  'Finalizando...'
             ! Mansaje si se ingresa una opción

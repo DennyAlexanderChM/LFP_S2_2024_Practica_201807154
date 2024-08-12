@@ -12,8 +12,11 @@ module class_Product
         procedure :: getName => getName
         procedure :: setName
         procedure :: getAmount => getAmount
+        procedure :: setAmount
         procedure :: getPrice => getPrice
+        procedure :: setPrice
         procedure :: getLocation => getLocation
+        procedure :: setLocation
         procedure :: printDates
 
     end type Product
