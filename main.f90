@@ -6,15 +6,8 @@ program main
     implicit none
 
     ! Define variables
-    !type(Product), allocatable :: products(:) ! Almacenara cada uno de los productos del inventario
-
+    type(Product), dimension(:), allocatable :: products ! Almacenara cada uno de los productos del inventario
     integer:: optionSelect
-
-    character(len=100) :: cadena
-
-    optionSelect = 0
-
-    cadena = "crear_equipo Lapices;100;2.50;BodegaA"
 
     !ciclo hasta que la opción seleccionada sea 2 (finalizar programa)
     do while (optionSelect /= 4)
@@ -34,11 +27,11 @@ program main
         ! Select para dirigir a la opción ingresada
         SELECT CASE (optionSelect)
         CASE (1)
-            call readFile()
+            call readInitFile(products)
         CASE (2)
-            print *, "Opcion 2"
+            call readInstructionsFile(products)
         CASE (3)
-            print *, "Option 3"
+            call createReport(products)
         CASE (4)
             WRITE(*,*)  'Finalizando...'
             ! Mansaje si se ingresa una opción

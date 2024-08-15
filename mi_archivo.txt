@@ -1,0 +1,9 @@
+ Informe de Inventario:
+ Equipo        Cantidad        Precio Unitario         Valor Total         Ubicacion
+ ___________________________________________________________________________________
+Lapices                  200                  2.50         500.00              BodegaA
+Computadoras              25               3000.00       75000.00              BodegaB
+Escritorios               75                100.75        7556.25              BodegaC
+cuaderno                  25                  3.50          87.50              BodegaC
+Mochilas                  20                300.00        6000.00              BodegaA
+Sillas                    12                100.00        1200.00              BodegaB
