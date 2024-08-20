@@ -12,6 +12,7 @@ program main
     !ciclo hasta que la opción seleccionada sea 2 (finalizar programa)
     do while (optionSelect /= 4)
         ! Impresión del menú en pantalla
+        print *
         print *, "-------------------------------------------------"
         print *, "Practica 1 - Lenguajes formales y de programacion"
         print *, "-------------------------------------------------"

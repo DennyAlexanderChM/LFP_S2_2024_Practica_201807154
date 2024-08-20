@@ -1,6 +1,6 @@
 agregar_stock Lapices;100;BodegaA
-eliminar_stock Computadoras;25;BodegaB
+eliminar_equipo Computadoras;25;BodegaB
 agregar_stock Escritorios;75;BodegaA
-eliminar_stock cuaderno;10;BodegaA
+eliminar_equipo cuaderno;10;BodegaA
 agregar_stock Mochilas;10;BodegaA
-eliminar_stock Sillas;15;BodegaB
+eliminar_equipo Sillas;15;BodegaB

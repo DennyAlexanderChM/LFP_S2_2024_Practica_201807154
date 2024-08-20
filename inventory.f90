@@ -36,11 +36,11 @@ module class_Inventory
     
                     call addStock(products, name, amount, location)
                 
-                else if(trim(action) == "eliminar_stock") then
+                else if(trim(action) == "eliminar_equipo") then
     
                     call reduceStock(products, name, amount, location)
                 else
-                    print *, "No se reconoce el comenado: ", action
+                    print *, "No se reconoce el comando: ", action
     
                 end if
                 
@@ -181,7 +181,7 @@ module class_Inventory
                     call  products(i)%setAmount(amount)
 
                 else
-
+                    print *
                     print *, "Error: la cantidad a eliminar es mayor a la cantidad en esa ubicacion"
                     print *, "Producto: ", trim(products(i)%name), " Stock: ", products(i)%amount, "Reajuste: -", amount
                     
