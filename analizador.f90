@@ -16,16 +16,13 @@ contains
         character(len=101) :: cadenaNueva
 
         i = 0
-
         estado = 1
-        
         actual = ""
-
         lexema = ""
-
         cadenaNueva = TRIM(cadena) // "#"
 
         do i = 1, LEN(cadenaNueva) ! obtiene la dimensian del array
+
             actual = cadenaNueva(i:i)
             
             if ( estado == 1  ) then
@@ -37,9 +34,7 @@ contains
                 else    
 
                     action = lexema
-
                     lexema = ""
-
                     estado = 2
                     
                 end if
@@ -52,9 +47,7 @@ contains
                 else    
 
                     name = lexema
-
                     estado = 3
-
                     lexema = ""
 
                 end if
@@ -65,6 +58,7 @@ contains
                     lexema = lexema // actual
                     
                 else
+
                     read(lexema, *) amount
                     estado = 4
                     lexema = ""
@@ -77,8 +71,8 @@ contains
                     lexema = lexema // actual
                     
                 else
-                    read(lexema, *) price
 
+                    read(lexema, *) price
                     estado = 5
                     lexema = ""
 
@@ -90,8 +84,10 @@ contains
                     lexema = lexema // actual
                     
                 else
+
                     location = lexema
                     exit
+
                 end if
             
             end if
@@ -110,13 +106,9 @@ contains
         character(len=101) :: cadenaNueva
 
         i = 0
-
         estado = 1
-        
         actual = ""
-
         lexema = ""
-
         cadenaNueva = TRIM(cadena) // "#"
 
         do i = 1, LEN(cadenaNueva) ! obtiene la dimensian del array
@@ -131,9 +123,7 @@ contains
                 else    
 
                     action = lexema
-
                     lexema = ""
-
                     estado = 2
                     
                 end if
@@ -146,9 +136,7 @@ contains
                 else    
 
                     name = lexema
-
                     estado = 3
-
                     lexema = ""
 
                 end if
@@ -159,6 +147,7 @@ contains
                     lexema = lexema // actual
                     
                 else
+                    
                     read(lexema, *) amount
                     estado = 4
                     lexema = ""

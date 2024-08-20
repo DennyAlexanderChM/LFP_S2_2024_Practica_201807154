@@ -1,7 +1,7 @@
 module class_Inventory
 
     use class_Product ! Importamos la clase producto
-    use class_Analyzer
+    use class_Analyzer ! Importamos la clase del analizador
     public
     integer :: numProducts
 
@@ -15,42 +15,40 @@ module class_Inventory
         integer :: amount, estadoApertura
 
         ! Abrimos el archivo
-        OPEN(UNIT=2, FILE='instrucciones.inv', STATUS='OLD', ACTION='READ', IOSTAT= estadoApertura)
+        OPEN(UNIT=2, FILE='instrucciones.mov', STATUS='OLD', ACTION='READ', IOSTAT= estadoApertura)
 
         ! Si la apertura del archivo no tiene errores
         if ( estadoApertura /= 0 ) then
 
             print *, "A ocurrido un error al abrir el archivo"
+        
+        else
 
-            stop
+            DO
+
+                READ(2, '(A)', IOSTAT=estadoApertura) linea
+    
+                if (estadoApertura /= 0) exit
+    
+                call analizarCadenaInstrucciones(linea, action, name, location, amount)
+    
+                if(trim(action) == "agregar_stock") then
+    
+                    call addStock(products, name, amount, location)
+                
+                else if(trim(action) == "eliminar_stock") then
+    
+                    call reduceStock(products, name, amount, location)
+                else
+                    print *, "No se reconoce el comenado: ", action
+    
+                end if
+                
+            END DO
 
         end if
-        
-        ! Si la apertura del archico es correcta
-            
-        DO
 
-            READ(2, '(A)', IOSTAT=estadoApertura) linea
-
-            if (estadoApertura /= 0) exit
-
-            call analizarCadenaInstrucciones(linea, action, name, location, amount)
-
-            if(trim(action) == "agregar_stock") then
-
-                call addStock(products, name, amount, location)
-            
-            else if(trim(action) == "eliminar_stock") then
-
-                call reduceStock(products, name, amount, location)
-            else
-                print *, "No se reconoce el comenado: ", action
-
-            end if
-            
-        END DO
-
-            ! Cerramos el archivo
+        ! Cerramos el archivo
         close(2)
   
     end subroutine readInstructionsFile
@@ -64,40 +62,39 @@ module class_Inventory
         real :: price
 
         ! Abrimos el archivo
-        OPEN(UNIT=1, FILE='incial.inv', STATUS='OLD', ACTION='READ', IOSTAT= estadoApertura)
+        OPEN(UNIT=1, FILE='inventario.inv', STATUS='OLD', ACTION='READ', IOSTAT= estadoApertura)
 
-        ! Si la apertura del archivo no tiene errores
+        ! Si la apertura del archivo tiene errores
         if ( estadoApertura /= 0 ) then
 
             print *, "A ocurrido un error al abrir el archivo"
 
-            stop
+        else
+
+            ! Si la apertura del archico es correcta
+            DO
+
+                READ(1, '(A)', IOSTAT=estadoApertura) linea
+
+                if (estadoApertura /= 0) exit
+
+                call analizarCadenaInicial(linea, action, name, location, price, amount)
+
+                if ( trim(action) == "crear_equipo" ) then
+
+                    call addProduct(products, name, amount, price, location)
+
+                else 
+
+                    print *, "Instruccion no reconocida: ", action
+
+                end if
+                
+            END DO
 
         end if
         
-        ! Si la apertura del archico es correcta
-            
-        DO
-
-            READ(1, '(A)', IOSTAT=estadoApertura) linea
-
-            if (estadoApertura /= 0) exit
-
-            call analizarCadenaInicial(linea, action, name, location, price, amount)
-
-            if ( trim(action) == "crear_equipo" ) then
-
-                call addProduct(products, name, amount, price, location)
-
-            else 
-
-                print *, "Intruccion no reconocida: ", action
-
-            end if
-            
-        END DO
-
-            ! Cerramos el archivo
+        ! Cerramos el archivo
         close(1)
   
     end subroutine readInitFile
@@ -181,12 +178,10 @@ module class_Inventory
                 if ( products(i)%amount >= amount ) then
 
                     amount = products(i)%amount - amount
-
                     call  products(i)%setAmount(amount)
 
                 else
 
-                    print *, "A ocurrido un error al actualizar!"
                     print *, "Error: la cantidad a eliminar es mayor a la cantidad en esa ubicacion"
                     print *, "Producto: ", trim(products(i)%name), " Stock: ", products(i)%amount, "Reajuste: -", amount
                     
@@ -198,7 +193,7 @@ module class_Inventory
             
         end do
 
-        if ( isOkay ) print *, "No se encontro ningun registro del Producto", name, " en ", location
+        if ( isOkay ) print *, "No se encontro ningun registro del Producto ", trim(name), " en ", location
 
     end subroutine reduceStock
 
@@ -210,26 +205,19 @@ module class_Inventory
         i = SIZE(products)
 
         ! Abrir el archivo para escribir (crea el archivo si no existe)
-        open(unit=10, file="mi_archivo.txt", status="unknown", action="write")
+        open(unit=10, file="mi_inventario.txt", status="unknown", action="write")
 
         if ( i > 0 ) then
             ! Escribir algunas líneas en el archivo
             write(10, *) "Informe de Inventario:"
-            write(10, *) "Equipo        Cantidad        Precio Unitario         Valor Total         Ubicacion"
-            write(10, *) "___________________________________________________________________________________"
+            write(10, *) "Equipo                      Cantidad        Precio Unitario         Valor Total         Ubicacion"
+            write(10, *) "_________________________________________________________________________________________________"
 
             do i = 1, SIZE(products)
 
                 total = products(i)%amount * products(i)%price
 
-                write(10,"(A, T20, I9, T40, F11.2, T55, F11.2, T80, A)") trim(products(i)%name), products(i)%amount, products(i)%price, total, trim(products(i)%location)
-
-                
-                print *, "_______________________________"
-                print *, "Producto: " , products(i)%name
-                print *, " Cantidad: " , products(i)%amount
-                print *, " Precio: " , products(i)%price
-                print *, " Ubicacion: " , products(i)%location
+                write(10,"(A, T30, I9, T50, F11.2, T70, F11.2, T90, A)") trim(products(i)%name), products(i)%amount, products(i)%price, total, trim(products(i)%location)
                 
             end do
 

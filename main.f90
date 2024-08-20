@@ -36,7 +36,7 @@ program main
             WRITE(*,*)  'Finalizando...'
             ! Mansaje si se ingresa una opción
         CASE DEFAULT
-            WRITE(*,*)  "Ingrese una opción correcta"
+            WRITE(*,*)  "Ingrese una opcion correcta"
         END SELECT
     end do
     
